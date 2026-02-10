@@ -4,8 +4,8 @@ namespace ShvetsGroup\LaravelEmailDatabaseLog\Tests\Feature;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Symfony\Component\Mime\Encoder\Base64Encoder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use ShvetsGroup\LaravelEmailDatabaseLog\Tests\TestCase;
 use ShvetsGroup\LaravelEmailDatabaseLog\Tests\Mail\TestMail;
 use ShvetsGroup\LaravelEmailDatabaseLog\Tests\Mail\TestMailWithAttachment;
@@ -14,7 +14,7 @@ class LaravelEmailDatabaseTest extends TestCase
 {
 	use RefreshDatabase;
 
-	/** @test */
+	#[Test]
 	public function the_email_is_logged_to_the_database()
 	{
 		Mail::to('email@example.com')
@@ -32,7 +32,7 @@ class LaravelEmailDatabaseTest extends TestCase
 		]);
 	}
 
-	/** @test */
+	#[Test]
 	public function multiple_recipients_are_comma_separated()
 	{
 		Mail::to(['email@example.com', 'email2@example.com'])
@@ -46,7 +46,7 @@ class LaravelEmailDatabaseTest extends TestCase
 		]);
 	}
 
-	/** @test */
+	#[Test]
 	public function recipient_with_name_is_correctly_formatted()
 	{
 		Mail::to((object)['email' => 'email@example.com', 'name' => 'John Do'])
@@ -60,7 +60,7 @@ class LaravelEmailDatabaseTest extends TestCase
 		]);
 	}
 
-	/** @test */
+	#[Test]
 	public function cc_recipient_with_name_is_correctly_formatted()
 	{
 		Mail::cc((object)['email' => 'email@example.com', 'name' => 'John Do'])
@@ -74,7 +74,7 @@ class LaravelEmailDatabaseTest extends TestCase
 		]);
 	}
 
-	/** @test */
+	#[Test]
 	public function bcc_recipient_with_name_is_correctly_formatted()
 	{
 		Mail::bcc((object)['email' => 'email@example.com', 'name' => 'John Do'])
@@ -88,15 +88,14 @@ class LaravelEmailDatabaseTest extends TestCase
 		]);
 	}
 
-	/** @test */
+	#[Test]
 	public function attachement_is_saved()
 	{
 		Mail::to('email@example.com')->send(new TestMailWithAttachment());
 
 		$log = DB::table('email_log')->first();
 
-		// TODO: Is there a beter way to tests this ?
-		$encoded = (new Base64Encoder)->encodeString(file_get_contents(__DIR__ . '/../stubs/demo.txt'));
+		$encoded = base64_encode(file_get_contents(__DIR__ . '/../stubs/demo.txt'));
 
 		$this->assertStringContainsString('Content-Type: text/plain; name=demo.txt', $log->attachments);
 		$this->assertStringContainsString('Content-Transfer-Encoding: base64', $log->attachments);

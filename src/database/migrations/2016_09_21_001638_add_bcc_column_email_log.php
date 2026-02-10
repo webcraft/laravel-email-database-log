@@ -1,15 +1,14 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class AddBccColumnEmailLog extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('email_log', function ($table) {
             if (!Schema::hasColumn('email_log', 'bcc')) {
@@ -21,14 +20,12 @@ class AddBccColumnEmailLog extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('email_log', function ($table) {
             $table->string('to')->change();
             $table->dropColumn('bcc');
         });
     }
-}
+};
