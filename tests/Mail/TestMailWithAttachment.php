@@ -3,34 +3,34 @@
 namespace ShvetsGroup\LaravelEmailDatabaseLog\Tests\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class TestMailWithAttachment extends Mailable
 {
-	use Queueable, SerializesModels;
+    use Queueable, SerializesModels;
 
-	/**
-	 * Create a new message instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		//
-	}
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'The e-mail subject',
+        );
+    }
 
-	/**
-	 * Build the message.
-	 *
-	 * @return $this
-	 */
-	public function build()
-	{
-		return $this
-			->subject('The e-mail subject')
-			->attach(__DIR__ . '/../stubs/demo.txt')
-			->html('<p>Some random string.</p>');
-	}
+    public function content(): Content
+    {
+        return new Content(
+            htmlString: '<p>Some random string.</p>',
+        );
+    }
+
+    public function attachments(): array
+    {
+        return [
+            Attachment::fromPath(__DIR__ . '/../stubs/demo.txt'),
+        ];
+    }
 }

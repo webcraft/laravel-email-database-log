@@ -2,18 +2,17 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
-class EmailLog extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('email_log', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->dateTime('date');
             $table->string('from')->nullable();
             $table->string('to')->nullable();
@@ -28,11 +27,9 @@ class EmailLog extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::drop('email_log');
+        Schema::dropIfExists('email_log');
     }
-}
+};
